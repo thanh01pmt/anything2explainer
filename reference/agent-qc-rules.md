@@ -8,6 +8,7 @@
 > 英文片（`config.ts` 的 `lang: 'en'`）另加两条：字幕折成两行（说明该块超 48 字符预算，已压进内容区）→ 中；进度条章名或章节卡标题被自动缩字号到发虚 → 低，回去把章名改短。
 
 ## 看什么（按优先级）
+
 1. **可读性/遮挡**：任何文字被字幕带（y637–690）、进度条（y687–720）、HUD（y28–100）、流程轨（有轨的章 y112–160，见分镜表「常驻层」）遮住或紧贴（<10px）；文字溢出画布；字号 <22px；白字压在白/浅色块上；灰字在雾底上不可读。
 2. **节拍**：关键元素出现帧 vs 对应字幕块起始帧（timeline.md）：晚 >3 帧或早 >6 帧记中；整句没有对应画面变化记高。检查方法：看字幕块起始帧 −6、0、+3、+8 四张帧。
 3. **事实/拼写**：画面英文与数字逐个核对调研文档；错字/繁简混用/术语不一致（同一概念两组写法不同）记中。
@@ -22,18 +23,22 @@
 11. **导航标签**：进度条章名（每章一个词组）与 HUD 小节名——只看这几个词，能不能说出该段讲什么？出现比喻、评价句、悬念词（反例 `感觉还行` / `两把尺子`）→ 低，直接给出改名建议。**改名很便宜**：章名只在 `narration.txt` 的 `# CHAPTER n 名` 行、HUD 词只在 `config.ts` 的 `hud[].text`，都不影响帧号与配音。
 
 ## 怎么看
+
 - 先看 `sheet_vN.html` 通读全片一遍（每 60 帧一张），列出可疑镜头；再对每个镜头按分镜表逐"节拍帧"看单帧；最后按 §5/§6 看连续帧。
 - 用 Read 看图；需要量化（bbox/颜色/亮度）用 Python PIL（亮度求和用 int32，int16 会溢出）。不要修改任何源码。
 - 闪烁合规（终检）：对每个镜头元素入场帧做 f0…f0+12 亮度曲线，0/0.5/1 跳变 = 闪烁；命中数必须等于白名单条数。
 - 每个镜头至少给出一行结论（"OK"也要写），保证覆盖。
 
 ## 严重度
+
 - 高：文字不可读/遮挡、整句无画面、事实错误、组件缺失（分镜表有而画面没有）、黑底盖幕底、空场（主体 <80px 持续 >45 帧）、运镜带动 HUD / 字幕。
 - 中：节拍偏差、样式不一致、衔接跳变、拼写、主体 <110px 持续 >45 帧、高光时刻主角无光、背景碎屑、运镜生硬或与 glitch 重叠、最长静止 >3 s、末拍稳定期 <30 帧（落位即切）、运镜进末拍。
 - 低：微调（间距/对齐/亮度）、可选优化。
 
 ## 5 Tiêu chuẩn Visual QA & Công cụ Tự động hóa (Automated Visual QA Tooling)
+
 Áp dụng pipeline kiểm tra thị giác tự động trước khi xuất bản thành phẩm:
+
 1. **Lệch baseline (Baseline Alignment)**: Tuyệt đối không mix inline components với kiểu định vị khác nhau (ví dụ `<MonoText>` top-aligned với `<CText>` center-aligned trên cùng một dòng). Phải bọc trong single Flex container `display: flex; align-items: center; justify-content: center;`.
 2. **Khoảng cách phụ đề & Vùng an toàn (Subtitle Clearance & Safe Margins)**: Nội dung chính không được lấn vào vùng phụ đề (y >= 590px đến 720px) hoặc sát mép dưới < 120px. Subtitle phải có frosted glass badge (`rgba(0,0,0,0.72)`) để tách biệt với timeline scrubber.
 3. **Độ tương phản & Chống rối nền (Contrast & Backdrop Bleed)**: Mọi thẻ chứa code / text quan trọng phải có backdrop mờ/đục (`rgba(10,12,18,0.85)`) để lưới dot grid hoặc starfield phía sau không đè rách chữ.
@@ -47,7 +52,9 @@
    - **Modular Shot Stitcher**: Khi sửa 1 shot, chỉ render riêng shot đó qua `python3 scripts/shot_stitcher.py --shot SC08` (~4s) rồi ghép nối siêu tốc qua FFmpeg concat `-c copy` (< 1s).
 
 ## 修复预算与例外旁路机制（Retry Budgets & Exception Bypass）
+
 借鉴 Kiteva 架构，杜绝 Agent 在修复同一缺陷时陷入死循环或耗尽上下文：
+
 1. **缺陷定额（Issue Allowance）**：
    - 每个缺陷（按 `Stage + ShotID + Element/Reason` 唯一指纹）最多允许 **3 次轻量级修复尝试** (`MAX_RETRY_PER_ERROR = 3`)。
    - 若 3 次尝试后仍未解决，升级（Escalate）至主模型进行 **最多 2 次高阶深度修复**。

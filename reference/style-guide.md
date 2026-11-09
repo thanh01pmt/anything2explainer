@@ -117,3 +117,20 @@ Noto Sans SC 自带完整拉丁字形（实测 wght 100–900 全覆盖），所
 4. **剪影先行（Silhouette First）**：
    - 绘制时先验证外轮廓与负空间（Negative Space）是否清晰可辨，再填充内部精细走线。
 
+## 7. Hệ thống Đa Phong cách (Multi-Theme Preset Engine)
+Học từ kho 142 visual directions của Kiteva, hệ thống hỗ trợ 3 Theme chính qua `src/theme/`:
+1. **`cyber` (Cyber Tech / Dark Neon - Mặc định)**:
+   - Nền tối `#08090D`, lưới chấm `DotFieldBg`, màu nhấn tím `#A855F7` và xanh `#10B981`. Phù hợp video lập trình, công nghệ máy tính, hackathon.
+2. **`swiss` (International Typographic Style - Kiteva `style-001`)**:
+   - Nền sáng `#F8F9FA`, lưới cột và baseline `SwissGridBg`, chữ tương phản cao `#0F172A`, một màu nhấn duy nhất là đỏ Thụy Sĩ `#D32F2F` hoặc xanh Bauhaus `#2563EB`. Phù hợp video giải thích kiến trúc phần mềm, tài chính, báo cáo dữ liệu sang trọng.
+3. **`blueprint` (Technical Architectural CAD - Kiteva `style-051`)**:
+   - Nền xanh thẫm CAD `#0A192F`, lưới đo tỷ lệ 2 tầng `BlueprintGridBg`, viền nét đứt và điểm nhấn cyan `#64FFDA` / amber `#F59E0B`. Phù hợp mổ xẻ nguyên lý hệ thống (System Design, Hardware, Networking).
+
+## 8. Thư viện Mẫu Chuyển động Kỹ thuật (Technical Motion Patterns)
+Nằm tại `src/common/motion/`:
+- **`TerminalTyping` (`motion-027`)**: Mô phỏng dòng lệnh gõ phím theo thời gian thực với con trỏ nhấp nháy, hỗ trợ syntax highlight.
+- **`DataPipeline` (`motion-018`)**: Luồng dữ liệu giữa các node kiến trúc với xung dữ liệu phát sáng (glowing packet) chạy dọc đường ống.
+- **`BoxedWordRelay` (`motion-049`)**: Hộp viền bao quanh chủ động nhảy tuần tự qua các từ khóa trong code theo lời voiceover.
+- **`SmartArrow`**: Tự động giấu đầu mũi tên cho đến khi thân mũi tên vẽ chạm tới đích ($\ge 92\%$).
+- **`ContentContainer`**: Tự động trì hoãn hiển thị nội dung bên trong cho tới khi container bung mở hoàn tất ($\ge 82\%$).
+

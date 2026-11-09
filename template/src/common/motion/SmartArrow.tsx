@@ -111,3 +111,4 @@ export const SmartArrow: React.FC<SmartArrowProps> = ({
     </svg>
   );
 };
+
