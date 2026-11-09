@@ -127,10 +127,27 @@ Học từ kho 142 visual directions của Kiteva, hệ thống hỗ trợ 3 The
    - Nền xanh thẫm CAD `#0A192F`, lưới đo tỷ lệ 2 tầng `BlueprintGridBg`, viền nét đứt và điểm nhấn cyan `#64FFDA` / amber `#F59E0B`. Phù hợp mổ xẻ nguyên lý hệ thống (System Design, Hardware, Networking).
 
 ## 8. Thư viện Mẫu Chuyển động Kỹ thuật (Technical Motion Patterns)
-Nằm tại `src/common/motion/`:
+Nằm tại `src/common/motion/`, bao gồm 3 nhóm chuyển động cốt lõi từ Kiteva:
+
+### 8.1. Nhóm Đồ họa Chữ (Kinetic Typography)
 - **`TerminalTyping` (`motion-027`)**: Mô phỏng dòng lệnh gõ phím theo thời gian thực với con trỏ nhấp nháy, hỗ trợ syntax highlight.
-- **`DataPipeline` (`motion-018`)**: Luồng dữ liệu giữa các node kiến trúc với xung dữ liệu phát sáng (glowing packet) chạy dọc đường ống.
 - **`BoxedWordRelay` (`motion-049`)**: Hộp viền bao quanh chủ động nhảy tuần tự qua các từ khóa trong code theo lời voiceover.
+- **`GlitchTypeBuild` (`motion-028`)**: Bung chữ bằng hiệu ứng hoán đổi ký tự ngẫu nhiên (cypher scramble glitch) trước khi khóa ký tự thật.
+- **`WordSmashCut` (`motion-030`)**: Cắt cảnh chữ đập mạnh vào tâm màn hình với sóng chấn động (shockwave) để nhấn mạnh từ khóa then chốt.
+- **`PhraseScatterStepIn` (`motion-029`)**: Các cụm từ từ nhiều hướng bay vào và sắp xếp ngay ngắn trên trục baseline.
+
+### 8.2. Nhóm Không gian & Camera (Spatial Camera Motion)
+- **`CameraOrbitRig` (`motion-014`)**: Bộ khung camera 3D mô phỏng góc quay (orbit), nghiêng (tilt) và tiêu cự chiều sâu trong không gian phối cảnh.
+- **`ParallaxDepthStage` (`motion-009`)**: Sân khấu thị sai 3 tầng (tiền cảnh, trung cảnh, hậu cảnh) di chuyển với các hệ số vận tốc khác nhau tạo chiều sâu điện ảnh.
+- **`DollyZoomFocus` (`motion-013`)**: Hiệu ứng Vertigo phóng gần chủ thể và đẩy lùi mờ hậu cảnh để khóa chặt sự chú ý của người xem.
+
+### 8.3. Nhóm Kiến trúc & Dữ liệu (System & Data Motion)
+- **`DataPipeline` (`motion-018`)**: Luồng dữ liệu giữa các node kiến trúc với xung dữ liệu phát sáng (glowing packet) chạy dọc đường ống.
+- **`StepTickSlotRefill` (`motion-041`)**: Trực quan hóa mảng ô nhớ (Array Buffer / Queue / Stack) với con trỏ index duyệt qua từng phần tử theo nhịp tick.
+- **`ExplodedNodeView` (`motion-024`)**: Bóc tách một khối kiến trúc phức tạp thành các tầng linh kiện rời (Exploded View) rồi gộp lại.
+- **`RankedBarRace` (`motion-047`)**: Biểu đồ cột ngang so sánh hiệu năng (Benchmark) tự động tráo đổi thứ hạng mượt mà theo tiến độ thời gian.
+
+### 8.4. Quy tắc Vi chuyển động (Micro-Motion Rules)
 - **`SmartArrow`**: Tự động giấu đầu mũi tên cho đến khi thân mũi tên vẽ chạm tới đích ($\ge 92\%$).
 - **`ContentContainer`**: Tự động trì hoãn hiển thị nội dung bên trong cho tới khi container bung mở hoàn tất ($\ge 82\%$).
 

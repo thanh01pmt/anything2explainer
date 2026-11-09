@@ -94,3 +94,4 @@ export const THEMES: Record<string, ThemeDef> = {
 export function getTheme(id?: string): ThemeDef {
   return THEMES[id || 'cyber'] || THEME_CYBER;
 }
+

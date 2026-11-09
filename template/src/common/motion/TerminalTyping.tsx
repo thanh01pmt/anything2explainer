@@ -69,3 +69,4 @@ export const TerminalTyping: React.FC<TerminalTypingProps> = ({
     </div>
   );
 };
+
