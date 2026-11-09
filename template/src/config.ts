@@ -4,8 +4,99 @@
  */
 export type HudEntry = {fromS: string; toS: string; text: string; tech?: string; fromOffset?: number; toOffset?: number; w?: number};
 export type RailSpec = {steps: string[]; switchS: string[]; fromS: string; toS: string};
+
+/**
+ * 5 Phong cách đồ họa (Style Presets) hỗ trợ Code-Driven & Mixed-Media
+ */
+export type StylePresetId = 
+  | 'cyber-dark'          // Nền đen chấm/sao, tím #6630F8 (mặc định)
+  | 'swiss-minimal'        // Nền sáng kem #FAF5E9, chữ than, đỏ #D32F2F
+  | 'technical-blueprint'  // Nền xanh navy #0A2540, nét cyan #00F0FF
+  | 'terminal-system'      // Nền đen #070A0F, phosphor green #00FF66
+  | 'mixed-documentary';   // Nền đen than, ảnh stock duotone, HUD nghiên cứu
+
+export interface ThemeTokens {
+  bg: string;
+  fg: string;
+  accent: string;
+  accentLight: string;
+  accentMuted: string;
+  cardBg: string;
+  cardBorder: string;
+  glow: string;
+}
+
+export const THEME_PRESETS: Record<StylePresetId, ThemeTokens> = {
+  'cyber-dark': {
+    bg: '#000000',
+    fg: '#FFFFFF',
+    accent: '#6630F8',
+    accentLight: '#A175F1',
+    accentMuted: '#2A2A2A',
+    cardBg: '#0B0C11',
+    cardBorder: 'rgba(255, 255, 255, 0.2)',
+    glow: '0 0 24px rgba(102, 48, 248, 0.6)',
+  },
+  'swiss-minimal': {
+    bg: '#FAF5E9',
+    fg: '#1A1A1A',
+    accent: '#D32F2F',
+    accentLight: '#EF5350',
+    accentMuted: '#E0DCD1',
+    cardBg: '#FFFFFF',
+    cardBorder: 'rgba(0, 0, 0, 0.15)',
+    glow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+  },
+  'technical-blueprint': {
+    bg: '#0A2540',
+    fg: '#E6F4FE',
+    accent: '#00F0FF',
+    accentLight: '#63F5FF',
+    accentMuted: '#143C65',
+    cardBg: '#0D2E4E',
+    cardBorder: 'rgba(0, 240, 255, 0.3)',
+    glow: '0 0 24px rgba(0, 240, 255, 0.5)',
+  },
+  'terminal-system': {
+    bg: '#070A0F',
+    fg: '#00FF66',
+    accent: '#00FF66',
+    accentLight: '#66FF99',
+    accentMuted: '#12251B',
+    cardBg: '#0B130E',
+    cardBorder: 'rgba(0, 255, 102, 0.3)',
+    glow: '0 0 20px rgba(0, 255, 102, 0.4)',
+  },
+  'mixed-documentary': {
+    bg: '#0D0E12',
+    fg: '#F0F2F5',
+    accent: '#3B82F6',
+    accentLight: '#60A5FA',
+    accentMuted: '#1F2937',
+    cardBg: '#13161C',
+    cardBorder: 'rgba(255, 255, 255, 0.18)',
+    glow: '0 0 24px rgba(59, 130, 246, 0.5)',
+  },
+};
+
+export const getTheme = (preset: StylePresetId = VIDEO.preset): ThemeTokens => 
+  THEME_PRESETS[preset] || THEME_PRESETS['cyber-dark'];
+
 export const VIDEO = {
   slug: 'demo', // 素材目录 public/assets/<slug>/（配音 audio.wav 由 tts_build.py 写到这里）
+  /**
+   * Phong cách thị giác của toàn bộ phim (mặc định 'cyber-dark' giữ tương thích 100% với bản cũ)
+   */
+  preset: 'cyber-dark' as StylePresetId,
+  /**
+   * BGM (Nhạc nền): Đường dẫn tương đối từ public/assets/, ví dụ: 'bgm/tech_ambient.mp3'.
+   * Để rỗng '' nếu không dùng nhạc nền. Main.tsx sẽ tự động ducking (-22dB) khi có voiceover.
+   */
+  bgm: '' as string,
+  /**
+   * Bật/tắt tự động tải tài nguyên media từ @thanh01.pmt/multimedia-kit
+   */
+  enableMediaKit: true,
   /**
    * 片子语言：'zh' 中文（默认）｜'en' 英文。
    * 影响 → 配音引擎（tts_build.py 的 TTS_ENGINE=auto 也会自己按解说词判语言）、标题/章节卡是否压窄（拉丁不压）、

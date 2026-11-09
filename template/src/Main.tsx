@@ -20,6 +20,13 @@ export const Stage: React.FC<{shots: ShotDef[]; bg: BgSpec[]; footage?: FootageS
   <AbsoluteFill style={{background: '#000'}}>
     <Fonts />
     {audio ? <Audio src={staticFile(`assets/${VIDEO.slug}/audio.wav`)} /> : null}
+    {audio && VIDEO.bgm ? (
+      <Audio
+        src={staticFile(`assets/${VIDEO.slug}/${VIDEO.bgm}`)}
+        loop
+        volume={0.12}
+      />
+    ) : null}
     {VIDEO.bg === 'dots' ? <DotFieldBg specs={bg} /> : <BgTrack specs={bg} />}
     <FootageTrack specs={footage} />
     {shots.filter((s) => s.layer !== 'aboveBar').map((s) => (

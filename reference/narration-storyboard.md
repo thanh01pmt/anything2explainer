@@ -71,6 +71,8 @@
 
 ## 3. 分镜（`script/storyboard_src.md` → `分镜表.md`）
 令牌：`{S12.from}` `{S12.to}` `{S12.c3}`（第 3 个字幕块起始帧）`{C2}`（第 2 章起始帧）`{TOTAL}`，可带 ±整数：`{S12.from-8}`。`python3 scripts/render_storyboard.py` 填帧号。
+- **媒体素材令牌（@thanh01.pmt/multimedia-kit）**：在画面描述中可标注 `[ASSET: photo "query"]`、`[ASSET: vector "query"]` 或 `[ASSET: video "query"]`。运行 `node scripts/sync_assets.mjs` 自动自 Pexels/Unsplash/Pixabay 检索、下载并生成 `ATTRIBUTION.md`。
+- **依据与出处停留预算（Evidence Reading Budget）**：出处小字/背景依据（40–70 字）**必须在所属镜头起始帧 f0={Sxx.from} 或 {Sxx.c1} 即入场，并在镜头内保持 ≥75 帧（≥2.5 s）的 ≥50% α 停留**，严禁挂在镜头的最后一个字幕块上（观众来不及读）。末拍落位后保持 30–45 帧稳定期。
 结构（照 `examples/rag/storyboard_src.md`）：
 1. 头部：总帧数、章节帧、衔接规则（镜头区间 = [首句 from−8, 下一句 from−9]，章末 / 片末 = 末句 to+2；末 8 帧离场；元素入场对齐字幕块起始帧 −6…+3；末拍落位 → 离场 ≥30 帧；运镜不进末拍）。**镜头按画面单元分，不按句分**：一段（解说词里两个空行之间）= 一个镜头，短句（<3 s 或单块）并入相邻镜头当节拍，单镜头 ≥120 帧，能承接就不清场。
 2. 常驻层表（覆盖层，主会话负责）：片头、章节卡、HUD 条目区间、流程轨步骤与切换帧、片尾；有轨的章标注"内容主区 y175–620"。

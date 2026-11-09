@@ -240,3 +240,7 @@ export const Vignette: React.FC<{k: number; alpha?: number; top?: number; topH?:
     </>
   );
 };
+
+// Re-export Procedural FX components
+export { DrawPath, ScanlineOverlay, BoundingBoxTracker, BlueprintGrid } from './fx/ProceduralFx';
+

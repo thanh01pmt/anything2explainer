@@ -494,3 +494,9 @@ export const RepoCard: React.FC<{x: number; y: number; w?: number; h?: number; n
     </Box>
   );
 };
+
+// Re-export Mixed-Media & Grid System components
+export { DuotoneImage, KenBurns, DocumentViewer } from './common/MediaEffects';
+export { getColBox, SplitCard } from './common/GridSystem';
+export { SineWaveCanvas } from './common/SineWaveCanvas';
+

@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "studio": "remotion studio src/index.ts"
+    "studio": "remotion studio src/index.ts",
+    "sync:assets": "node scripts/sync_assets.mjs"
   },
   "dependencies": {
     "@remotion/cli": "4.0.507",
