@@ -37,10 +37,14 @@
 1. **Lệch baseline (Baseline Alignment)**: Tuyệt đối không mix inline components với kiểu định vị khác nhau (ví dụ `<MonoText>` top-aligned với `<CText>` center-aligned trên cùng một dòng). Phải bọc trong single Flex container `display: flex; align-items: center; justify-content: center;`.
 2. **Khoảng cách phụ đề & Vùng an toàn (Subtitle Clearance & Safe Margins)**: Nội dung chính không được lấn vào vùng phụ đề (y >= 590px đến 720px) hoặc sát mép dưới < 120px. Subtitle phải có frosted glass badge (`rgba(0,0,0,0.72)`) để tách biệt với timeline scrubber.
 3. **Độ tương phản & Chống rối nền (Contrast & Backdrop Bleed)**: Mọi thẻ chứa code / text quan trọng phải có backdrop mờ/đục (`rgba(10,12,18,0.85)`) để lưới dot grid hoặc starfield phía sau không đè rách chữ.
-4. **Đồng bộ Lời - Hình (Audio-Visual Cue Synchronization)**: Khi voiceover đọc từ khóa / cú pháp (ví dụ `_` underscore), visual tương ứng phải active đồng thời (dung sai ±3 frames). Phải re-time `timeline.ts` theo SRT thực tế của ngôn ngữ đích trước khi render.
-5. **Vòng lặp sửa lỗi tiết kiệm (Cost-Saving Self-Correction via Still)**:
-   - Quét kiểm tra toàn bộ shot: `python3 scripts/visual_qa.py` (tự chụp peak frame của từng shot trong ~1.5s, tạo `renders/sheet.html` và `renders/qa-report.json`).
-   - Sửa lỗi cục bộ & re-check: `python3 scripts/shot_corrector.py --shot SC08` (chỉ chụp lại 1 still frame để nghiệm thu, không render lại cả video).
+4. **Đồng bộ Lời - Hình & Nhịp đọc (Audio-Visual Sync & Reading Holds)**:
+   - Khi voiceover đọc từ khóa / cú pháp (ví dụ `_` underscore), visual tương ứng phải active đồng thời (dung sai ±3 frames). Phải re-time `timeline.ts` theo SRT thực tế của ngôn ngữ đích trước khi render.
+   - **Reading Holds**: Khối văn bản / code kỹ thuật sau khi bung diễn hoạt phải có thời gian đứng yên tối thiểu $\ge 1.2s$ (36 frames) trước khi chuyển cảnh, tránh tình trạng chữ lướt qua quá nhanh.
+5. **Chuẩn hóa Âm lượng Broadcast & Vi chuyển động (Broadcast Audio & Micro-Motion Tools)**:
+   - **EBU R128**: Chuẩn hóa giọng đọc qua `python3 scripts/narration_level.py input.wav` đạt chuẩn -18 LUFS và True Peak -1.5 dBTP.
+   - **SmartArrow**: Không để lộ đầu mũi tên khi thân đang vẽ; chỉ bung đầu mũi tên khi thân đạt $\ge 92\%$.
+   - **ContentContainer**: Giữ nhãn / chữ ẩn hoàn toàn cho đến khi khung viền / card mở được $\ge 82\%$ (`openProgress`).
+   - **Modular Shot Stitcher**: Khi sửa 1 shot, chỉ render riêng shot đó qua `python3 scripts/shot_stitcher.py --shot SC08` (~4s) rồi ghép nối siêu tốc qua FFmpeg concat `-c copy` (< 1s).
 
 ## 修复预算与例外旁路机制（Retry Budgets & Exception Bypass）
 借鉴 Kiteva 架构，杜绝 Agent 在修复同一缺陷时陷入死循环或耗尽上下文：

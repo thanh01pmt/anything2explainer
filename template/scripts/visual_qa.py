@@ -136,6 +136,28 @@ def check_rules(root, shots):
                     'cheapEligible': True
                 })
 
+    # 4. Kiểm tra nhịp đọc & thời gian giữ khung hình (Reading Holds & Pacing - Kiteva Standard)
+    for s in shots:
+        content = s['content']
+        duration_frames = s['to'] - s['from']
+        duration_sec = duration_frames / 30.0
+
+        # Ước tính số lượng từ hiển thị trong code/text components
+        text_matches = re.findall(r"(?:text=|children=|\>)(?:[\"'])([^\"'<>]{4,})(?:[\"'])", content)
+        total_words = sum(len(m.split()) for m in text_matches)
+
+        # Kiteva Pacing Guidance: Cần tối thiểu 1.2s (36 frames) settled reading hold cho các cảnh có văn bản kỹ thuật
+        if total_words >= 6 and duration_sec < 1.3:
+            findings.append({
+                'focus': 'pacing',
+                'severity': 'warning',
+                'shotId': s['id'],
+                'file': os.path.relpath(s['file'], root),
+                'issue': f"Shot {s['id']} hiển thị {total_words} từ kỹ thuật nhưng chỉ kéo dài {duration_sec:.1f}s ({duration_frames} frames), vi phạm tiêu chuẩn 'Reading Holds' của Kiteva (cần tối thiểu 1.3s để đọc hiểu sau khi bung hoạt ảnh).",
+                'expectedFix': "Tăng thời lượng shot thêm tối thiểu 15-20 frames hoặc tinh giản lượng từ ngữ để khán giả kịp tiếp nhận thông tin.",
+                'cheapEligible': True
+            })
+
     return findings
 
 def render_stills_and_sheet(root, shots, findings, out_dir):

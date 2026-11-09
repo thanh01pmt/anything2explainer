@@ -40,8 +40,20 @@ echo "  - Master Video: $MASTER_VIDEO"
 echo "  - Voiceover Track: $NARRATION_AUDIO"
 echo "  - Output Target: $OUTPUT_VIDEO"
 
+SCRIPT_DIR=$(dirname "$0")
+NORM_SCRIPT="$SCRIPT_DIR/narration_level.py"
+EFFECTIVE_NARRATION="$NARRATION_AUDIO"
+
+if [ -f "$NORM_SCRIPT" ]; then
+  echo "🎙️ [EBU R128] Tự động chuẩn hóa âm lượng giọng đọc (-18 LUFS, -1.5 dBTP Peak Limiter)..."
+  TMP_NORM="/tmp/narration_r128_$$.wav"
+  python3 "$NORM_SCRIPT" "$NARRATION_AUDIO" --output "$TMP_NORM" --target -18.0
+  EFFECTIVE_NARRATION="$TMP_NORM"
+  trap 'rm -f "$TMP_NORM"' EXIT
+fi
+
 # Lấy thời lượng của Narration Audio để đồng bộ video
-DURATION=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$NARRATION_AUDIO")
+DURATION=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$EFFECTIVE_NARRATION")
 echo "  - Thời lượng giọng đọc: ${DURATION}s"
 
 if [ -n "$BGM_AUDIO" ] && [ -f "$BGM_AUDIO" ]; then
@@ -50,7 +62,7 @@ if [ -n "$BGM_AUDIO" ] && [ -f "$BGM_AUDIO" ]; then
     echo "📝 Đính kèm phụ đề mềm (Soft subtitles)..."
     ffmpeg -v error -y \
       -i "$MASTER_VIDEO" \
-      -i "$NARRATION_AUDIO" \
+      -i "$EFFECTIVE_NARRATION" \
       -stream_loop -1 -i "$BGM_AUDIO" \
       -i "$SUBTITLES" \
       -filter_complex "[2:a]volume=0.18[bgm];[1:a]volume=1.0[voice];[bgm][voice]amix=inputs=2:duration=first:dropout_transition=2[aout]" \
@@ -63,7 +75,7 @@ if [ -n "$BGM_AUDIO" ] && [ -f "$BGM_AUDIO" ]; then
   else
     ffmpeg -v error -y \
       -i "$MASTER_VIDEO" \
-      -i "$NARRATION_AUDIO" \
+      -i "$EFFECTIVE_NARRATION" \
       -stream_loop -1 -i "$BGM_AUDIO" \
       -filter_complex "[2:a]volume=0.18[bgm];[1:a]volume=1.0[voice];[bgm][voice]amix=inputs=2:duration=first:dropout_transition=2[aout]" \
       -map 0:v -map "[aout]" \
@@ -78,7 +90,7 @@ else
     echo "📝 Đính kèm phụ đề mềm (Soft subtitles)..."
     ffmpeg -v error -y \
       -i "$MASTER_VIDEO" \
-      -i "$NARRATION_AUDIO" \
+      -i "$EFFECTIVE_NARRATION" \
       -i "$SUBTITLES" \
       -map 0:v -map 1:a -map 2:s \
       -c:v copy \
@@ -89,7 +101,7 @@ else
   else
     ffmpeg -v error -y \
       -i "$MASTER_VIDEO" \
-      -i "$NARRATION_AUDIO" \
+      -i "$EFFECTIVE_NARRATION" \
       -map 0:v -map 1:a \
       -c:v copy \
       -c:a aac -b:a 192k \
