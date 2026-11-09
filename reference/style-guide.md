@@ -104,3 +104,16 @@ Noto Sans SC 自带完整拉丁字形（实测 wght 100–900 全覆盖），所
 - **标签 + 说明**：Pill（紫/橙）在上，Noto 24px 白说明在下 12px。
 - **信息层级**：一帧一个焦点；说明字灰 #A0A0A1；数字用 Orbitron 橙。
 - **尺寸三档与光**（细则 `composition-and-light.md`）：主角 ≥170px 或大字 ≥96px 且必带光；配角 60–110；标签 22–30。上表里的卡 150×92、Pill 150×44 都是**配角尺寸**，不能当主角用；表现「多」用方点阵列，背景只有幕底（星点或点阵波）。
+
+## 6. SVG 精细矢量绘制协议（SVG Craftsmanship Protocol）
+借鉴 Kiteva 漫画与高精度矢量规范（`docs/manga-svg-craft.md`），在以代码纯绘制角色、精密仪器或拓扑图时遵循以下美学准则：
+1. **变粗细笔触（Variable-width Inking）**：
+   - 避免在所有外框统一施加单一的 `stroke-width: 2px`（会导致图形扁平、机械呆板）。
+   - 主体轮廓与阴影交界处改用闭合填充路径（`closed filled paths`）构建楔形（wedges）笔触，模拟真实运笔的压力渐变与轻重层次。
+2. **三阶贝塞尔切线连续性（Cubic Bezier Tangent Continuity）**：
+   - 使用 `C`（Cubic）与 `S`（Smooth Cubic）指令，在圆弧与曲面接缝处严格保持两侧控制点共线（Collinear Handles），确保机械曲面或有机轮廓绝对平滑，仅在刻意折痕处使用尖角 `L`。
+3. **结构化形体剪裁投影（Form-following `clipPath`）**：
+   - 排线（Hatching）、阴影与高光必须被约束在明确的 `<clipPath>` 内部，严格贴合受光面的几何形态，严禁脱离结构随意漂浮渐变色。
+4. **剪影先行（Silhouette First）**：
+   - 绘制时先验证外轮廓与负空间（Negative Space）是否清晰可辨，再填充内部精细走线。
+
